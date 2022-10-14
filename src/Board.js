@@ -6,7 +6,7 @@ import {
   whitePawn, whiteRook, whiteQueen
 } from './pieces';
 
-const Board = () => {
+const Board = ({ player, capturePiece }) => {
   const [board, setBoard] = useState([])
   const [pieceToMove, setPieceToMove] = useState('')
   const [previousX, setPreviousX] = useState(0)
@@ -57,7 +57,6 @@ const Board = () => {
 
   const initPieces = () => {
     let newBoard = [...board]
-    console.log(board)
 
     newBoard[1].forEach(block => {
       block.piece = 'black-pawn'
@@ -125,13 +124,37 @@ const Board = () => {
       setPieceToMove('')
       setPreviousX(0)
       setPreviousY(0)
+    } else if (pieceToMove && block.piece) {
+      if (pieceToMove.startsWith('white') && block.piece.startsWith('black')) {
+        capturePiece(block)
+        movePiece(pieceToMove, block.x, block.y)
+        movePiece('', previousX, previousY)
+        let newBoard = board
+        newBoard[previousX][previousY].grabbed = false
+        setBoard(newBoard)
+        setPieceToMove('')
+        setPreviousX(0)
+        setPreviousY(0)
+      }
+      if (pieceToMove.startsWith('black') && block.piece.startsWith('white')) {
+        capturePiece(block)
+        movePiece(pieceToMove, block.x, block.y)
+        movePiece('', previousX, previousY)
+        let newBoard = board
+        newBoard[previousX][previousY].grabbed = false
+        setBoard(newBoard)
+        setPieceToMove('')
+        setPreviousX(0)
+        setPreviousY(0)
+      }
     }
   }
 
   const renderBoard = () => {
     return (
       <div className={classNames('grid-container', {
-        'grabbing': pieceToMove
+        'grabbing': pieceToMove,
+        'black-player': player.color === 'black'
       })}>
         {board.map(row => row.map(block => {
           return (
@@ -140,46 +163,46 @@ const Board = () => {
               key={`${block.x},${block.y}`}
               onClick={() => {
                 handleClick(block)
-              }}>{block.piece && renderPiece(block.piece, block.grabbed)}</div>
+              }}>{block.piece && renderPiece(block.piece, block.grabbed, player.color)}</div>
           )
         }))}
       </div>
     )
   }
 
-  const renderPiece = (piece, grabbed) => {
+  const renderPiece = (piece, grabbed, playerColor) => {
     switch (piece) {
       case 'black-pawn':
-        return blackPawn(grabbed)
+        return blackPawn(grabbed, playerColor)
       case 'black-rook':
-        return blackRook(grabbed)
+        return blackRook(grabbed, playerColor)
       case 'black-knight':
-        return blackKnight(grabbed)
+        return blackKnight(grabbed, playerColor)
       case 'black-bishop':
-        return blackBishop(grabbed)
+        return blackBishop(grabbed, playerColor)
       case 'black-queen':
-        return blackQueen(grabbed)
+        return blackQueen(grabbed, playerColor)
       case 'black-king':
-        return blackKing(grabbed)
+        return blackKing(grabbed, playerColor)
       case 'white-pawn':
-        return whitePawn(grabbed)
+        return whitePawn(grabbed, playerColor)
       case 'white-rook':
-        return whiteRook(grabbed)
+        return whiteRook(grabbed, playerColor)
       case 'white-knight':
-        return whiteKnight(grabbed)
+        return whiteKnight(grabbed, playerColor)
       case 'white-bishop':
-        return whiteBishop(grabbed)
+        return whiteBishop(grabbed, playerColor)
       case 'white-queen':
-        return whiteQueen(grabbed)
+        return whiteQueen(grabbed, playerColor)
       case 'white-king':
-        return whiteKing(grabbed)
+        return whiteKing(grabbed, playerColor)
       default:
         return ''
     }
   }
 
   return (
-    <div className="board-container">Board
+    <div className="board-container">
       {renderBoard()}
     </div>
   )

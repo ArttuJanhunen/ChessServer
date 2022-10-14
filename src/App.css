@@ -79,8 +79,55 @@
 .pieces {
   font-size: 70px;
   cursor: grab;
+  display: block;
 }
 
 .pieces.grabbed {
   text-shadow: 0px 0px 8px rgb(141, 241, 241);
+}
+
+.pieces.captured {
+  font-size: 50px;
+  margin-top: 10px;
+}
+
+.grid-container.black-player {
+  transform: rotate(180deg)
+}
+
+.pieces.black-player {
+  transform: rotate(180deg) translateY(25px);
+}
+
+.game-area {
+  display: flex;
+}
+
+.capture-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-right: 50px;
+  height: 800px;
+  padding: 10px;
+}
+
+.capture-area.black-player {
+  transform: rotate(180deg);
+}
+
+.capture-container {
+  border: 10px solid rgb(87, 58, 4);
+  border-radius: 5px;
+  height: 150px;
+  width: 400px;
+  padding: 10px 10px 10px 10px;
+  background-color: burlywood;
+  display: grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto;
+  grid-template-rows: auto auto;
+}
+
+.capture-container.black-player {
+  transform: rotate(180deg);
 }
